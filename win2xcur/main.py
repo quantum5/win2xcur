@@ -2,6 +2,9 @@ import argparse
 import os
 import sys
 import traceback
+from multiprocessing import cpu_count
+from multiprocessing.pool import ThreadPool
+from threading import Lock
 
 from win2xcur import shadow
 from win2xcur.parser import open_blob
@@ -30,17 +33,19 @@ def main() -> None:
                         help='color of the shadow')
 
     args = parser.parse_args()
+    print_lock = Lock()
 
     check_xcursorgen()
 
-    for file in args.files:
+    def process(file):
         name = file.name
         blob = file.read()
         try:
             cursor = open_blob(blob)
         except Exception:
-            print('Error occurred while processing %s:' % (name,), file=sys.stderr)
-            traceback.print_exc()
+            with print_lock:
+                print('Error occurred while processing %s:' % (name,), file=sys.stderr)
+                traceback.print_exc()
         else:
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
@@ -49,6 +54,9 @@ def main() -> None:
             output = os.path.join(args.output, os.path.splitext(os.path.basename(name))[0])
             with open(output, 'wb') as f:
                 f.write(result)
+
+    with ThreadPool(cpu_count()) as pool:
+        pool.map(process, args.files)
 
 
 if __name__ == '__main__':
