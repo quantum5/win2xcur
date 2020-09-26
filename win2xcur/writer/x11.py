@@ -40,10 +40,15 @@ def to_x11(frames: List[CursorFrame]) -> bytes:
                 image.save(filename=os.path.join(png_dir, name))
                 counter += 1
 
-        process = subprocess.Popen(['xcursorgen', '-p', png_dir], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        result, error = process.communicate('\n'.join(configs).encode(sys.getfilesystemencoding()))
+        output_file = os.path.join(png_dir, 'cursor')
+        process = subprocess.Popen(['xcursorgen', '-p', png_dir, '-', output_file], stdin=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
 
-    if error:
-        raise RuntimeError('xcursorgen failed: %r' % error)
+        _, error = process.communicate('\n'.join(configs).encode(sys.getfilesystemencoding()))
+        if process.wait() != 0:
+            raise RuntimeError('xcursorgen failed: %r' % error)
+
+        with open(output_file, 'rb') as f:
+            result = f.read()
 
     return result
