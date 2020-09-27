@@ -1,0 +1,43 @@
+name: Python package
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.5, 3.6, 3.7, 3.8 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 mypy wheel
+          pip install -r requirements.txt
+          sudo apt-get install x11-apps
+      - name: Lint with flake8
+        run: flake8 .
+      - name: Typecheck with mypy
+        run: mypy .
+      - name: Test packages
+        run: python setup.py sdist bdist_wheel
+      - name: Test wheel install
+        run: pip install dist/*.whl
+      - name: Test with sample/crosshair.cur
+        run: |
+          win2xcur sample/crosshair.cur -o /tmp
+          ls -l /tmp/crosshair
+      - name: Test with animated cursors
+        run: |
+          wget http://www.anicursor.com/waiting.zip
+          mkdir ani output
+          unzip waiting.zip -d ani
+          win2xcur -s sample/crosshair.cur -o output
+          ls -l output/*
