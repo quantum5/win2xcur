@@ -35,14 +35,21 @@ class ANIParser(BaseParser):
     def _unpack(self, struct_cls: struct.Struct, offset: int) -> Tuple[Any, ...]:
         return struct_cls.unpack(self.blob[offset:offset + struct_cls.size])
 
-    def _read_chunk(self, offset: int, expected: Iterable[bytes]) -> Tuple[int, int]:
-        name, size = self._unpack(self.CHUNK_HEADER, offset)
-        if name not in expected:
-            raise ValueError('Expected chunk %r, found %r' % (expected, name))
-        return size, offset + self.CHUNK_HEADER.size
+    def _read_chunk(self, offset: int, expected: Iterable[bytes]) -> Tuple[bytes, int, int]:
+        found = []
+        while True:
+            name, size = self._unpack(self.CHUNK_HEADER, offset)
+            offset += self.CHUNK_HEADER.size
+            if name in expected:
+                break
+            found += [name]
+            offset += size
+            if offset >= len(self.blob):
+                raise ValueError('Expected chunk %r, found %r' % (expected, found))
+        return name, size, offset
 
     def _parse(self, offset: int) -> List[CursorFrame]:
-        size, offset = self._read_chunk(offset, expected=[b'anih'])
+        _, size, offset = self._read_chunk(offset, expected=[b'anih'])
 
         if size != self.ANIH_HEADER.size:
             raise ValueError('Unexpected anih header size %d, expected %d' % (size, self.ANIH_HEADER.size))
@@ -54,38 +61,42 @@ class ANIParser(BaseParser):
             raise NotImplementedError('Raw BMP images not supported.')
 
         offset += self.ANIH_HEADER.size
-        list_size, offset = self._read_chunk(offset, expected=[b'LIST'])
-        list_end = list_size + offset
-
-        if self.blob[offset:offset + 4] != self.FRAME_TYPE:
-            raise ValueError('Unexpected RIFF list type: %r, expected %r' %
-                             (self.blob[offset:offset + 4], self.FRAME_TYPE))
-        offset += 4
 
         frames = []
-        for i in range(frame_count):
-            size, offset = self._read_chunk(offset, expected=[b'icon'])
-            frames.append(CURParser(self.blob[offset:offset + size]).frames[0])
-            offset += size
-
-        if offset != list_end:
-            raise ValueError('Wrong RIFF list size: %r, expected %r' % (offset, list_end))
-
-        sequence = frames
-        if flags & self.SEQUENCE_FLAG:
-            size, offset = self._read_chunk(offset, expected=[b'seq '])
-            sequence = [copy(frames[i]) for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
-            if len(sequence) != step_count:
-                raise ValueError('Wrong animation sequence size: %r, expected %r' % (len(sequence), step_count))
-            offset += size
-
+        order = list(range(frame_count))
         delays = [display_rate for _ in range(step_count)]
-        if offset < len(self.blob):
-            size, offset = self._read_chunk(offset, expected=[b'rate'])
-            delays = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
-            if len(sequence) != step_count:
-                raise ValueError('Wrong animation rate size: %r, expected %r' % (len(delays), step_count))
 
+        while offset < len(self.blob):
+            name, size, offset = self._read_chunk(offset, expected=[b'LIST', b'seq ', b'rate'])
+            if name == b'LIST':
+                list_end = offset + size
+                if self.blob[offset:offset + 4] != self.FRAME_TYPE:
+                    raise ValueError('Unexpected RIFF list type: %r, expected %r' %
+                                     (self.blob[offset:offset + 4], self.FRAME_TYPE))
+                offset += 4
+
+                for i in range(frame_count):
+                    _, size, offset = self._read_chunk(offset, expected=[b'icon'])
+                    frames.append(CURParser(self.blob[offset:offset + size]).frames[0])
+                    offset += size
+
+                if offset != list_end:
+                    raise ValueError('Wrong RIFF list size: %r, expected %r' % (offset, list_end))
+            elif name == b'seq ':
+                order = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
+                if len(order) != step_count:
+                    raise ValueError('Wrong animation sequence size: %r, expected %r' % (len(order), step_count))
+                offset += size
+            elif name == b'rate':
+                delays = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
+                if len(delays) != step_count:
+                    raise ValueError('Wrong animation rate size: %r, expected %r' % (len(delays), step_count))
+                offset += size
+
+        if len(order) != step_count:
+            raise ValueError('Required chunk "seq " not found.')
+
+        sequence = [copy(frames[i]) for i in order]
         for frame, delay in zip(sequence, delays):
             frame.delay = delay / 60
 
