@@ -39,5 +39,5 @@ jobs:
           wget http://www.anicursor.com/waiting.zip
           mkdir ani output
           unzip waiting.zip -d ani
-          win2xcur -s sample/crosshair.cur -o output
+          win2xcur -s ani/*.ani -o output
           ls -l output/*
