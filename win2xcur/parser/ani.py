@@ -20,6 +20,9 @@ class ANIParser(BaseParser):
 
     @classmethod
     def can_parse(cls, blob: bytes) -> bool:
+        signature: bytes
+        size: int
+        subtype: bytes
         signature, size, subtype = cls.RIFF_HEADER.unpack(blob[:cls.RIFF_HEADER.size])
         return signature == cls.SIGNATURE and size == len(blob) - 8 and subtype == cls.ANI_TYPE
 

@@ -5,6 +5,7 @@ import traceback
 from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool
 from threading import Lock
+from typing import BinaryIO
 
 from win2xcur import shadow
 from win2xcur.parser import open_blob
@@ -37,7 +38,7 @@ def main() -> None:
 
     check_xcursorgen()
 
-    def process(file) -> None:
+    def process(file: BinaryIO) -> None:
         name = file.name
         blob = file.read()
         try:

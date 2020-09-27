@@ -13,11 +13,11 @@ class CursorImage:
 
 
 class CursorFrame:
-    def __init__(self, images: List[CursorImage], delay=0) -> None:
+    def __init__(self, images: List[CursorImage], delay: int = 0) -> None:
         self.images = images
         self.delay = delay
 
-    def __getitem__(self, item) -> CursorImage:
+    def __getitem__(self, item: int) -> CursorImage:
         return self.images[item]
 
     def __len__(self) -> int:
