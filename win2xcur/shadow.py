@@ -22,7 +22,7 @@ def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float,
     return result
 
 
-def apply_to_frames(frames: List[CursorFrame], **kwargs):
+def apply_to_frames(frames: List[CursorFrame], **kwargs) -> None:
     for frame in frames:
         for cursor in frame:
             cursor.image = apply_to_image(cursor.image, **kwargs)

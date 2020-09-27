@@ -37,7 +37,7 @@ def main() -> None:
 
     check_xcursorgen()
 
-    def process(file):
+    def process(file) -> None:
         name = file.name
         blob = file.read()
         try:

@@ -1,10 +1,13 @@
 import struct
 from copy import copy
+from typing import Any, Iterable, List, Tuple
 
+from win2xcur.cursor import CursorFrame
+from win2xcur.parser.base import BaseParser
 from win2xcur.parser.cur import CURParser
 
 
-class ANIParser:
+class ANIParser(BaseParser):
     SIGNATURE = b'RIFF'
     ANI_TYPE = b'ACON'
     FRAME_TYPE = b'fram'
@@ -16,26 +19,26 @@ class ANIParser:
     ICON_FLAG = 0x1
 
     @classmethod
-    def can_parse(cls, blob):
+    def can_parse(cls, blob: bytes) -> bool:
         signature, size, subtype = cls.RIFF_HEADER.unpack(blob[:cls.RIFF_HEADER.size])
         return signature == cls.SIGNATURE and size == len(blob) - 8 and subtype == cls.ANI_TYPE
 
-    def __init__(self, blob):
-        self.blob = blob
+    def __init__(self, blob: bytes) -> None:
+        super().__init__(blob)
         if not self.can_parse(blob):
             raise ValueError('Not a .ani file')
         self.frames = self._parse(self.RIFF_HEADER.size)
 
-    def _unpack(self, struct_cls, offset):
+    def _unpack(self, struct_cls: struct.Struct, offset: int) -> Tuple[Any, ...]:
         return struct_cls.unpack(self.blob[offset:offset + struct_cls.size])
 
-    def _read_chunk(self, offset, expected):
+    def _read_chunk(self, offset: int, expected: Iterable[bytes]) -> Tuple[int, int]:
         name, size = self._unpack(self.CHUNK_HEADER, offset)
         if name not in expected:
             raise ValueError('Expected chunk %r, found %r' % (expected, name))
         return size, offset + self.CHUNK_HEADER.size
 
-    def _parse(self, offset):
+    def _parse(self, offset: int) -> List[CursorFrame]:
         size, offset = self._read_chunk(offset, expected=[b'anih'])
 
         if size != self.ANIH_HEADER.size:
