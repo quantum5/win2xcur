@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 flake8-import-order mypy wheel
+          pip install flake8 flake8-import-order mypy wheel coverage
           pip install -r requirements.txt
           sudo apt-get install x11-apps
       - name: Lint with flake8
@@ -32,12 +32,15 @@ jobs:
         run: pip install dist/*.whl
       - name: Test with sample/crosshair.cur
         run: |
-          win2xcur sample/crosshair.cur -o /tmp
+          coverage run -m win2xcur.main sample/crosshair.cur -o /tmp
           ls -l /tmp/crosshair
       - name: Test with animated cursors
         run: |
           wget http://www.anicursor.com/waiting.zip
           mkdir ani output
           unzip waiting.zip -d ani
-          win2xcur -s ani/*.ani -o output
+          coverage run -m win2xcur.main -s ani/*.ani -o output
           ls -l output/*
+      - name: Generating coverage report
+        run: coverage xml
+      - uses: codecov/codecov-action@v1
