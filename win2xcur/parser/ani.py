@@ -90,6 +90,8 @@ class ANIParser(BaseParser):
                     _, size, offset = self._read_chunk(offset, expected=[self.ICON_CHUNK])
                     frames.append(CURParser(self.blob[offset:offset + size]).frames[0])
                     offset += size
+                    if offset & 1:
+                        offset += 1
 
                 if offset != list_end:
                     raise ValueError('Wrong RIFF list size: %r, expected %r' % (offset, list_end))
