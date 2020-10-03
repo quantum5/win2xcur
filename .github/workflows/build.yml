@@ -39,12 +39,12 @@ jobs:
           wget http://www.anicursor.com/waiting.zip
           mkdir ani output
           unzip waiting.zip -d ani
-          coverage run -m win2xcur.main.win2xcur -s ani/*.ani -o output
+          coverage run -a -m win2xcur.main.win2xcur -s ani/*.ani -o output
           ls -l output/*
       - name: Test with dmz-cursor-theme
         run: |
           mkdir dmz-white
-          coverage run -m win2xcur.main.x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white
+          coverage run -a -m win2xcur.main.x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white
           ls -l dmz-white/*
       - name: Generating coverage report
         run: coverage xml
