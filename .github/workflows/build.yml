@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 flake8-import-order mypy wheel coverage
           pip install -r requirements.txt
-          sudo apt-get install x11-apps
+          sudo apt-get install x11-apps dmz-cursor-theme
       - name: Lint with flake8
         run: flake8 .
       - name: Typecheck with mypy
@@ -32,15 +32,20 @@ jobs:
         run: pip install dist/*.whl
       - name: Test with sample/crosshair.cur
         run: |
-          coverage run -m win2xcur.main sample/crosshair.cur -o /tmp
+          coverage run -m win2xcur.main.win2xcur sample/crosshair.cur -o /tmp
           ls -l /tmp/crosshair
       - name: Test with animated cursors
         run: |
           wget http://www.anicursor.com/waiting.zip
           mkdir ani output
           unzip waiting.zip -d ani
-          coverage run -m win2xcur.main -s ani/*.ani -o output
+          coverage run -m win2xcur.main.win2xcur -s ani/*.ani -o output
           ls -l output/*
+      - name: Test with dmz-cursor-theme
+        run: |
+          mkdir dmz-white
+          coverage run -m win2xcur.main.x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white
+          ls -l dmz-white/*
       - name: Generating coverage report
         run: coverage xml
       - uses: codecov/codecov-action@v1
