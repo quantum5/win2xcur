@@ -4,6 +4,9 @@ from wand.sequence import SingleImage
 
 
 class CursorImage:
+    image: SingleImage
+    hotspot: Tuple[int, int]
+
     def __init__(self, image: SingleImage, hotspot: Tuple[int, int]) -> None:
         self.image = image
         self.hotspot = hotspot
@@ -13,6 +16,9 @@ class CursorImage:
 
 
 class CursorFrame:
+    images: List[CursorImage]
+    delay: int
+
     def __init__(self, images: List[CursorImage], delay: int = 0) -> None:
         self.images = images
         self.delay = delay

@@ -10,7 +10,12 @@ from win2xcur.parser.cur import CURParser
 class ANIParser(BaseParser):
     SIGNATURE = b'RIFF'
     ANI_TYPE = b'ACON'
+    HEADER_CHUNK = b'anih'
+    LIST_CHUNK = b'LIST'
+    SEQ_CHUNK = b'seq '
+    RATE_CHUNK = b'rate'
     FRAME_TYPE = b'fram'
+    ICON_CHUNK = b'icon'
     RIFF_HEADER = struct.Struct('<4sI4s')
     CHUNK_HEADER = struct.Struct('<4sI')
     ANIH_HEADER = struct.Struct('<IIIIIIIII')
@@ -23,7 +28,10 @@ class ANIParser(BaseParser):
         signature: bytes
         size: int
         subtype: bytes
-        signature, size, subtype = cls.RIFF_HEADER.unpack(blob[:cls.RIFF_HEADER.size])
+        try:
+            signature, size, subtype = cls.RIFF_HEADER.unpack(blob[:cls.RIFF_HEADER.size])
+        except struct.error:
+            return False
         return signature == cls.SIGNATURE and size == len(blob) - 8 and subtype == cls.ANI_TYPE
 
     def __init__(self, blob: bytes) -> None:
@@ -49,13 +57,16 @@ class ANIParser(BaseParser):
         return name, size, offset
 
     def _parse(self, offset: int) -> List[CursorFrame]:
-        _, size, offset = self._read_chunk(offset, expected=[b'anih'])
+        _, size, offset = self._read_chunk(offset, expected=[self.HEADER_CHUNK])
 
         if size != self.ANIH_HEADER.size:
             raise ValueError('Unexpected anih header size %d, expected %d' % (size, self.ANIH_HEADER.size))
 
         size, frame_count, step_count, width, height, bit_count, planes, display_rate, flags = self.ANIH_HEADER.unpack(
             self.blob[offset:offset + self.ANIH_HEADER.size])
+
+        if size != self.ANIH_HEADER.size:
+            raise ValueError('Unexpected size in anih header %d, expected %d' % (size, self.ANIH_HEADER.size))
 
         if not flags & self.ICON_FLAG:
             raise NotImplementedError('Raw BMP images not supported.')
@@ -67,8 +78,8 @@ class ANIParser(BaseParser):
         delays = [display_rate for _ in range(step_count)]
 
         while offset < len(self.blob):
-            name, size, offset = self._read_chunk(offset, expected=[b'LIST', b'seq ', b'rate'])
-            if name == b'LIST':
+            name, size, offset = self._read_chunk(offset, expected=[self.LIST_CHUNK, self.SEQ_CHUNK, self.RATE_CHUNK])
+            if name == self.LIST_CHUNK:
                 list_end = offset + size
                 if self.blob[offset:offset + 4] != self.FRAME_TYPE:
                     raise ValueError('Unexpected RIFF list type: %r, expected %r' %
@@ -76,18 +87,20 @@ class ANIParser(BaseParser):
                 offset += 4
 
                 for i in range(frame_count):
-                    _, size, offset = self._read_chunk(offset, expected=[b'icon'])
+                    _, size, offset = self._read_chunk(offset, expected=[self.ICON_CHUNK])
                     frames.append(CURParser(self.blob[offset:offset + size]).frames[0])
                     offset += size
+                    if offset & 1:
+                        offset += 1
 
                 if offset != list_end:
                     raise ValueError('Wrong RIFF list size: %r, expected %r' % (offset, list_end))
-            elif name == b'seq ':
+            elif name == self.SEQ_CHUNK:
                 order = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
                 if len(order) != step_count:
                     raise ValueError('Wrong animation sequence size: %r, expected %r' % (len(order), step_count))
                 offset += size
-            elif name == b'rate':
+            elif name == self.RATE_CHUNK:
                 delays = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
                 if len(delays) != step_count:
                     raise ValueError('Wrong animation rate size: %r, expected %r' % (len(delays), step_count))
