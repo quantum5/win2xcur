@@ -1,8 +1,9 @@
+from io import BytesIO
 from itertools import chain
 from typing import List
 
 from win2xcur.cursor import CursorFrame
-from win2xcur.parser import CURParser
+from win2xcur.parser import ANIParser, CURParser
 
 
 def to_cur(frame: CursorFrame) -> bytes:
@@ -24,3 +25,38 @@ def to_cur(frame: CursorFrame) -> bytes:
         offset += len(blob)
 
     return b''.join(chain([header], directory, image_data))
+
+
+def get_ani_cur_list(frames: List[CursorFrame]) -> bytes:
+    io = BytesIO()
+    for frame in frames:
+        cur_file = to_cur(frame)
+        io.write(ANIParser.CHUNK_HEADER.pack(ANIParser.ICON_CHUNK, len(cur_file)))
+        io.write(cur_file)
+        if len(cur_file) & 1:
+            io.write(b'\0')
+    return io.getvalue()
+
+
+def get_ani_rate_chunk(frames: List[CursorFrame]) -> bytes:
+    io = BytesIO()
+    io.write(ANIParser.CHUNK_HEADER.pack(ANIParser.RATE_CHUNK, ANIParser.UNSIGNED.size * len(frames)))
+    for frame in frames:
+        io.write(ANIParser.UNSIGNED.pack(int(round(frame.delay * 60))))
+    return io.getvalue()
+
+
+def to_ani(frames: List[CursorFrame]) -> bytes:
+    ani_header = ANIParser.ANIH_HEADER.pack(
+        ANIParser.ANIH_HEADER.size, len(frames), len(frames), 0, 0, 32, 1, 1, ANIParser.ICON_FLAG
+    )
+
+    cur_list = get_ani_cur_list(frames)
+    chunks = [
+        ANIParser.CHUNK_HEADER.pack(ANIParser.HEADER_CHUNK, len(ani_header)),
+        ani_header,
+        ANIParser.RIFF_HEADER.pack(ANIParser.LIST_CHUNK, len(cur_list) + 4, ANIParser.FRAME_TYPE),
+        cur_list,
+    ]
+    body = b''.join(chunks)
+    return ANIParser.RIFF_HEADER.pack(ANIParser.SIGNATURE, len(body) + 4, ANIParser.ANI_TYPE) + body
