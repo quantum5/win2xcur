@@ -13,7 +13,8 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'win2xcur = win2xcur.main:main',
+            'win2xcur = win2xcur.main.win2xcur:main',
+            'x2wincur = win2xcur.main.x2wincur:main',
         ],
     },
 

@@ -1,6 +1,6 @@
 from io import BytesIO
 from itertools import chain
-from typing import List
+from typing import List, Tuple
 
 from win2xcur.cursor import CursorFrame
 from win2xcur.parser import ANIParser, CURParser
@@ -60,3 +60,10 @@ def to_ani(frames: List[CursorFrame]) -> bytes:
     ]
     body = b''.join(chunks)
     return ANIParser.RIFF_HEADER.pack(ANIParser.SIGNATURE, len(body) + 4, ANIParser.ANI_TYPE) + body
+
+
+def to_smart(frames: List[CursorFrame]) -> Tuple[str, bytes]:
+    if len(frames) == 1:
+        return '.cur', to_cur(frames[0])
+    else:
+        return '.ani', to_ani(frames)
