@@ -57,6 +57,7 @@ def to_ani(frames: List[CursorFrame]) -> bytes:
         ani_header,
         ANIParser.RIFF_HEADER.pack(ANIParser.LIST_CHUNK, len(cur_list) + 4, ANIParser.FRAME_TYPE),
         cur_list,
+        get_ani_rate_chunk(frames),
     ]
     body = b''.join(chunks)
     riff_header: bytes = ANIParser.RIFF_HEADER.pack(ANIParser.SIGNATURE, len(body) + 4, ANIParser.ANI_TYPE)
