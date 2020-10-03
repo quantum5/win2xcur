@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
 
 setup(
     name='win2xcur',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages(),
     install_requires=['Wand'],
 
