@@ -8,7 +8,7 @@ from threading import Lock
 from typing import BinaryIO
 
 from win2xcur.parser import open_blob
-from win2xcur.writer.windows import to_smart
+from win2xcur.writer import to_smart
 
 
 def main() -> None:

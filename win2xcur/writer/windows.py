@@ -3,8 +3,7 @@ from itertools import chain
 from typing import List, Tuple
 
 from win2xcur.cursor import CursorFrame
-from win2xcur.parser.ani import ANIParser
-from win2xcur.parser.cur import CURParser
+from win2xcur.parser import ANIParser, CURParser
 
 
 def to_cur(frame: CursorFrame) -> bytes:

@@ -5,6 +5,8 @@ from win2xcur.parser.base import BaseParser
 from win2xcur.parser.cur import CURParser
 from win2xcur.parser.xcursor import XCursorParser
 
+__all__ = ['ANIParser', 'CURParser', 'XCursorParser', 'PARSERS', 'open_blob']
+
 PARSERS: List[Type[BaseParser]] = [CURParser, ANIParser, XCursorParser]
 
 
