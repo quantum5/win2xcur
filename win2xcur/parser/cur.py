@@ -9,6 +9,7 @@ from win2xcur.parser.base import BaseParser
 
 class CURParser(BaseParser):
     MAGIC = b'\0\0\02\0'
+    ICO_TYPE_CUR = 2
     ICON_DIR = struct.Struct('<HHH')
     ICON_DIR_ENTRY = struct.Struct('<BBBBHHII')
 
@@ -27,7 +28,7 @@ class CURParser(BaseParser):
     def _parse_header(self) -> List[Tuple[int, int]]:
         reserved, ico_type, image_count = self.ICON_DIR.unpack(self.blob[:self.ICON_DIR.size])
         assert reserved == 0
-        assert ico_type == 2
+        assert ico_type == self.ICO_TYPE_CUR
         assert image_count == len(self._image.sequence)
 
         offset = self.ICON_DIR.size
