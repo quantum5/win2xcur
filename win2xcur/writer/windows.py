@@ -3,7 +3,8 @@ from itertools import chain
 from typing import List, Tuple
 
 from win2xcur.cursor import CursorFrame
-from win2xcur.parser import ANIParser, CURParser
+from win2xcur.parser.ani import ANIParser
+from win2xcur.parser.cur import CURParser
 
 
 def to_cur(frame: CursorFrame) -> bytes:
@@ -59,7 +60,8 @@ def to_ani(frames: List[CursorFrame]) -> bytes:
         cur_list,
     ]
     body = b''.join(chunks)
-    return ANIParser.RIFF_HEADER.pack(ANIParser.SIGNATURE, len(body) + 4, ANIParser.ANI_TYPE) + body
+    riff_header: bytes = ANIParser.RIFF_HEADER.pack(ANIParser.SIGNATURE, len(body) + 4, ANIParser.ANI_TYPE)
+    return riff_header + body
 
 
 def to_smart(frames: List[CursorFrame]) -> Tuple[str, bytes]:

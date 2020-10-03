@@ -9,8 +9,7 @@ from typing import BinaryIO
 
 from win2xcur import shadow
 from win2xcur.parser import open_blob
-from win2xcur.writer import to_x11
-from win2xcur.writer.x11 import check_xcursorgen
+from win2xcur.writer.x11 import check_xcursorgen, to_x11
 
 
 def main() -> None:

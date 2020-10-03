@@ -1,6 +1,6 @@
 import struct
 from collections import defaultdict
-from typing import Any, Dict, Iterator, List, Tuple, cast
+from typing import Any, Dict, List, Tuple, cast
 
 from win2xcur.cursor import CursorFrame, CursorImage
 from win2xcur.parser.base import BaseParser
