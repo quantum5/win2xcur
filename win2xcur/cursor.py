@@ -6,13 +6,15 @@ from wand.sequence import SingleImage
 class CursorImage:
     image: SingleImage
     hotspot: Tuple[int, int]
+    nominal: int
 
-    def __init__(self, image: SingleImage, hotspot: Tuple[int, int]) -> None:
+    def __init__(self, image: SingleImage, hotspot: Tuple[int, int], nominal: int) -> None:
         self.image = image
         self.hotspot = hotspot
+        self.nominal = nominal
 
     def __repr__(self) -> str:
-        return 'CursorImage(image=%r, hotspot=%r)' % (self.image, self.hotspot)
+        return 'CursorImage(image=%r, hotspot=%r, nominal=%r)' % (self.image, self.hotspot, self.nominal)
 
 
 class CursorFrame:

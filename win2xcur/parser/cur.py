@@ -22,7 +22,7 @@ class CURParser(BaseParser):
         self._image = Image(blob=blob, format='cur')
         self._hotspots = self._parse_header()
         self.frames = [CursorFrame([
-            CursorImage(image, hotspot) for image, hotspot in zip(self._image.sequence, self._hotspots)
+            CursorImage(image, hotspot, image.width) for image, hotspot in zip(self._image.sequence, self._hotspots)
         ])]
 
     def _parse_header(self) -> List[Tuple[int, int]]:

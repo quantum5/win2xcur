@@ -81,7 +81,7 @@ class XCursorParser(BaseParser):
             image = Image(width=width, height=height)
             image.import_pixels(channel_map='BGRA', data=blob)
             images_by_size[nominal_size].append(
-                (CursorImage(image.sequence[0], (x_offset, y_offset)), delay)
+                (CursorImage(image.sequence[0], (x_offset, y_offset), nominal_size), delay)
             )
 
         if len(set(map(len, images_by_size.values()))) != 1:
