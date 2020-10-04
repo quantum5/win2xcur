@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 flake8-import-order mypy wheel coverage
           pip install -r requirements.txt
-          sudo apt-get install x11-apps dmz-cursor-theme
+          sudo apt-get install dmz-cursor-theme
       - name: Lint with flake8
         run: flake8 .
       - name: Typecheck with mypy
