@@ -32,7 +32,7 @@ class XCursorParser(BaseParser):
         assert magic == self.MAGIC
 
         if version != self.VERSION:
-            raise ValueError('Unsupported Xcursor version %r' % version)
+            raise ValueError(f'Unsupported Xcursor version 0x{version:08x}')
 
         offset = self.FILE_HEADER.size
         chunks: List[Tuple[int, int, int]] = []
@@ -51,32 +51,31 @@ class XCursorParser(BaseParser):
                 self._unpack(self.IMAGE_HEADER, position)
 
             if size != self.IMAGE_HEADER.size:
-                raise ValueError('Unexpected size: %r, expected %r' % (size, self.IMAGE_HEADER.size))
+                raise ValueError(f'Unexpected size: {size}, expected {self.IMAGE_HEADER.size}')
 
             if actual_type != chunk_type:
-                raise ValueError('Unexpected chunk type: %r, expected %r' % (actual_type, chunk_type))
+                raise ValueError(f'Unexpected chunk type: {actual_type}, expected {chunk_type}')
 
             if nominal_size != chunk_subtype:
-                raise ValueError('Unexpected nominal size: %r, expected %r' % (nominal_size, chunk_subtype))
+                raise ValueError(f'Unexpected nominal size: {nominal_size}, expected {chunk_subtype}')
 
             if width > 0x7FFF:
-                raise ValueError('Image width too large: %r' % width)
+                raise ValueError(f'Image width too large: {width}')
 
             if height > 0x7FFF:
-                raise ValueError('Image height too large: %r' % height)
+                raise ValueError(f'Image height too large: {height}')
 
             if x_offset > width:
-                raise ValueError('Hotspot x-coordinate too large: %r' % x_offset)
+                raise ValueError(f'Hotspot x-coordinate too large: {x_offset}')
 
             if y_offset > height:
-                raise ValueError('Hotspot x-coordinate too large: %r' % y_offset)
+                raise ValueError(f'Hotspot x-coordinate too large: {y_offset}')
 
             image_start = position + self.IMAGE_HEADER.size
             image_size = width * height * 4
             blob = self.blob[image_start:image_start + image_size]
             if len(blob) != image_size:
-                raise ValueError('Invalid image at %d: expected %d bytes, got %d bytes' %
-                                 (image_size, image_size, len(blob)))
+                raise ValueError(f'Invalid image at {image_start}: expected {image_size} bytes, got {len(blob)} bytes')
 
             image = Image(width=width, height=height)
             image.import_pixels(channel_map='BGRA', data=blob)

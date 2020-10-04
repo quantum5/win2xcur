@@ -53,20 +53,20 @@ class ANIParser(BaseParser):
             found += [name]
             offset += size
             if offset >= len(self.blob):
-                raise ValueError('Expected chunk %r, found %r' % (expected, found))
+                raise ValueError(f'Expected chunk {expected!r}, found {found!r}')
         return name, size, offset
 
     def _parse(self, offset: int) -> List[CursorFrame]:
         _, size, offset = self._read_chunk(offset, expected=[self.HEADER_CHUNK])
 
         if size != self.ANIH_HEADER.size:
-            raise ValueError('Unexpected anih header size %d, expected %d' % (size, self.ANIH_HEADER.size))
+            raise ValueError(f'Unexpected anih header size {size}, expected {self.ANIH_HEADER.size}')
 
         size, frame_count, step_count, width, height, bit_count, planes, display_rate, flags = self.ANIH_HEADER.unpack(
             self.blob[offset:offset + self.ANIH_HEADER.size])
 
         if size != self.ANIH_HEADER.size:
-            raise ValueError('Unexpected size in anih header %d, expected %d' % (size, self.ANIH_HEADER.size))
+            raise ValueError(f'Unexpected size in anih header {size}, expected {self.ANIH_HEADER.size}')
 
         if not flags & self.ICON_FLAG:
             raise NotImplementedError('Raw BMP images not supported.')
@@ -82,8 +82,8 @@ class ANIParser(BaseParser):
             if name == self.LIST_CHUNK:
                 list_end = offset + size
                 if self.blob[offset:offset + 4] != self.FRAME_TYPE:
-                    raise ValueError('Unexpected RIFF list type: %r, expected %r' %
-                                     (self.blob[offset:offset + 4], self.FRAME_TYPE))
+                    raise ValueError(
+                        f'Unexpected RIFF list type: {self.blob[offset:offset + 4]!r}, expected {self.FRAME_TYPE!r}')
                 offset += 4
 
                 for i in range(frame_count):
@@ -94,16 +94,16 @@ class ANIParser(BaseParser):
                         offset += 1
 
                 if offset != list_end:
-                    raise ValueError('Wrong RIFF list size: %r, expected %r' % (offset, list_end))
+                    raise ValueError(f'Wrong RIFF list size: {offset}, expected {list_end}')
             elif name == self.SEQ_CHUNK:
                 order = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
                 if len(order) != step_count:
-                    raise ValueError('Wrong animation sequence size: %r, expected %r' % (len(order), step_count))
+                    raise ValueError(f'Wrong animation sequence size: {len(order)}, expected {step_count}')
                 offset += size
             elif name == self.RATE_CHUNK:
                 delays = [i for i, in self.UNSIGNED.iter_unpack(self.blob[offset:offset + size])]
                 if len(delays) != step_count:
-                    raise ValueError('Wrong animation rate size: %r, expected %r' % (len(delays), step_count))
+                    raise ValueError(f'Wrong animation rate size: {len(delays)}, expected {step_count}')
                 offset += size
 
         if len(order) != step_count:

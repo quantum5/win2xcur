@@ -28,7 +28,7 @@ def main() -> None:
             cursor = open_blob(blob)
         except Exception:
             with print_lock:
-                print('Error occurred while processing %s:' % (name,), file=sys.stderr)
+                print(f'Error occurred while processing {name}:', file=sys.stderr)
                 traceback.print_exc()
         else:
             ext, result = to_smart(cursor.frames)

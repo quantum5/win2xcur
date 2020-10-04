@@ -14,7 +14,7 @@ class CursorImage:
         self.nominal = nominal
 
     def __repr__(self) -> str:
-        return 'CursorImage(image=%r, hotspot=%r, nominal=%r)' % (self.image, self.hotspot, self.nominal)
+        return f'CursorImage(image={self.image!r}, hotspot={self.hotspot!r}, nominal={self.nominal!r})'
 
 
 class CursorFrame:
@@ -35,4 +35,4 @@ class CursorFrame:
         return iter(self.images)
 
     def __repr__(self) -> str:
-        return 'CursorFrame(images=%r, delay=%r)' % (self.images, self.delay)
+        return f'CursorFrame(images={self.images!r}, delay={self.delay!r})'

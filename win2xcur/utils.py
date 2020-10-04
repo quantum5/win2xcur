@@ -1,3 +1,5 @@
+from typing import cast
+
 import numpy
 
 
@@ -7,4 +9,4 @@ def premultiply_alpha(source: bytes) -> bytes:
     buffer[0::4] *= alpha
     buffer[1::4] *= alpha
     buffer[2::4] *= alpha
-    return buffer.astype(numpy.uint8).tobytes()
+    return cast(bytes, buffer.astype(numpy.uint8).tobytes())
