@@ -10,7 +10,6 @@ from typing import BinaryIO
 from win2xcur import shadow
 from win2xcur.parser import open_blob
 from win2xcur.writer import to_x11
-from win2xcur.writer.x11 import check_xcursorgen
 
 
 def main() -> None:
@@ -36,8 +35,6 @@ def main() -> None:
 
     args = parser.parse_args()
     print_lock = Lock()
-
-    check_xcursorgen()
 
     def process(file: BinaryIO) -> None:
         name = file.name
