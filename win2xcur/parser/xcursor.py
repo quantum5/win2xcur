@@ -78,7 +78,7 @@ class XCursorParser(BaseParser):
                                  (image_size, image_size, len(blob)))
 
             images_by_size[nominal_size].append(
-                (CursorImage(image_from_pixels(blob, width, height, 'ARGB', 'char'), (x_offset, y_offset)), delay)
+                (CursorImage(image_from_pixels(blob, width, height, 'BGRA', 'char'), (x_offset, y_offset)), delay)
             )
 
         if len(set(map(len, images_by_size.values()))) != 1:
