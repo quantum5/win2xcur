@@ -4,6 +4,7 @@ from typing import List
 
 from win2xcur.cursor import CursorFrame
 from win2xcur.parser import XCursorParser
+from win2xcur.utils import premultiply_alpha
 
 
 def to_x11(frames: List[CursorFrame]) -> bytes:
@@ -15,7 +16,7 @@ def to_x11(frames: List[CursorFrame]) -> bytes:
             header = XCursorParser.IMAGE_HEADER.pack(
                 XCursorParser.IMAGE_HEADER.size,
                 XCursorParser.CHUNK_IMAGE,
-                cursor.image.width,
+                cursor.nominal,
                 1,
                 cursor.image.width,
                 cursor.image.height,
@@ -25,8 +26,8 @@ def to_x11(frames: List[CursorFrame]) -> bytes:
             )
             chunks.append((
                 XCursorParser.CHUNK_IMAGE,
-                cursor.image.width,
-                header + bytes(cursor.image.export_pixels(channel_map='BGRA'))
+                cursor.nominal,
+                header + premultiply_alpha(bytes(cursor.image.export_pixels(channel_map='BGRA')))
             ))
 
     header = XCursorParser.FILE_HEADER.pack(

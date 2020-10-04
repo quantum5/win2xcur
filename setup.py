@@ -9,7 +9,7 @@ setup(
     name='win2xcur',
     version='0.0.3',
     packages=find_packages(),
-    install_requires=['Wand'],
+    install_requires=['numpy', 'Wand'],
 
     entry_points={
         'console_scripts': [
