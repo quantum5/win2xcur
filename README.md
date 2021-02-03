@@ -9,7 +9,7 @@ hotspot and animation delay, and has an optional mode to add shadows that
 replicates Windows's cursor shadow effect.
 
 `x2wincur` is a tool that does the opposite: it converts cursors in the Xcursor
-format to Windows format (`*.cur`, *.ani`), allowing to use your favourite
+format to Windows format (`*.cur`, `*.ani`), allowing to use your favourite
 Linux cursor themes on Windows.
 
 ## Installation
