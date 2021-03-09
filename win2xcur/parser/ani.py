@@ -32,7 +32,7 @@ class ANIParser(BaseParser):
             signature, size, subtype = cls.RIFF_HEADER.unpack(blob[:cls.RIFF_HEADER.size])
         except struct.error:
             return False
-        return signature == cls.SIGNATURE and size == len(blob) - 8 and subtype == cls.ANI_TYPE
+        return signature == cls.SIGNATURE and subtype == cls.ANI_TYPE
 
     def __init__(self, blob: bytes) -> None:
         super().__init__(blob)
