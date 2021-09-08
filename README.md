@@ -44,3 +44,11 @@ For example, if you want to convert DMZ-White to Windows:
 
     mkdir dmz-white/
     x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white/
+
+## Troubleshooting
+
+`win2xcur` and `x2wincur` should work out of the box on most systems. If you
+are using unconventional distros (e.g. Alphine) and are getting errors related
+to `wand`, please see the [Wand documentation on installation][wand-install].
+
+  [wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
