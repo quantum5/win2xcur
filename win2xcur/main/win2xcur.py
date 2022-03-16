@@ -29,7 +29,7 @@ def main() -> None:
     parser.add_argument('-x', '--shadow-x', type=float, default=0.05,
                         help='x-offset of shadow (as fraction of width)')
     parser.add_argument('-y', '--shadow-y', type=float, default=0.05,
-                        help='x-offset of shadow (as fraction of height)')
+                        help='y-offset of shadow (as fraction of height)')
     parser.add_argument('-c', '--shadow-color', default='#000000',
                         help='color of the shadow')
 
