@@ -1,12 +1,12 @@
-from typing import cast
+from typing import Any
 
-import numpy
+import numpy as np
 
 
 def premultiply_alpha(source: bytes) -> bytes:
-    buffer = numpy.frombuffer(source, dtype=numpy.uint8).astype(numpy.double)
+    buffer: np.ndarray[Any, np.dtype[np.double]] = np.frombuffer(source, dtype=np.uint8).astype(np.double)
     alpha = buffer[3::4] / 255.0
     buffer[0::4] *= alpha
     buffer[1::4] *= alpha
     buffer[2::4] *= alpha
-    return cast(bytes, buffer.astype(numpy.uint8).tobytes())
+    return buffer.astype(np.uint8).tobytes()
