@@ -49,6 +49,7 @@ class XCursorParser(BaseParser):
 
             size, actual_type, nominal_size, version, width, height, x_offset, y_offset, delay = \
                 self._unpack(self.IMAGE_HEADER, position)
+            delay /= 1000
 
             if size != self.IMAGE_HEADER.size:
                 raise ValueError(f'Unexpected size: {size}, expected {self.IMAGE_HEADER.size}')
