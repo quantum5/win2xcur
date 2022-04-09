@@ -1,9 +1,14 @@
 from typing import List
 
 from wand.color import Color
-from wand.image import BaseImage, Image
+from wand.image import BaseImage, COMPOSITE_OPERATORS, Image
 
 from win2xcur.cursor import CursorFrame
+
+if 'copy_opacity' in COMPOSITE_OPERATORS:
+    COPY_ALPHA = 'copy_opacity'  # ImageMagick 6 name
+else:
+    COPY_ALPHA = 'copy_alpha'  # ImageMagick 7 name
 
 
 def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float, xoffset: float,
@@ -20,7 +25,7 @@ def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float,
     opacity.modulate(50)
 
     shadow = Image(width=new_width, height=new_height, pseudo='xc:' + color)
-    shadow.composite(opacity, operator='copy_opacity')
+    shadow.composite(opacity, operator=COPY_ALPHA)
 
     result = Image(width=new_width, height=new_height, pseudo='xc:transparent')
     result.composite(image)
