@@ -7,8 +7,10 @@ from win2xcur.cursor import CursorFrame
 
 if 'copy_opacity' in COMPOSITE_OPERATORS:
     COPY_ALPHA = 'copy_opacity'  # ImageMagick 6 name
+    NEEDS_NEGATE = False
 else:
     COPY_ALPHA = 'copy_alpha'  # ImageMagick 7 name
+    NEEDS_NEGATE = True
 
 
 def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float, xoffset: float,
@@ -18,8 +20,14 @@ def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float,
     new_width = image.width + 3 * xoffset
     new_height = image.height + 3 * yoffset
 
+    if NEEDS_NEGATE:
+        channel = image.channel_images['opacity'].clone()
+        channel.negate()
+    else:
+        channel = image.channel_images['opacity']
+
     opacity = Image(width=new_width, height=new_height, pseudo='xc:white')
-    opacity.composite(image.channel_images['opacity'], left=xoffset, top=yoffset)
+    opacity.composite(channel, left=xoffset, top=yoffset)
     opacity.gaussian_blur(radius * image.width, sigma * image.width)
     opacity.negate()
     opacity.modulate(50)
@@ -28,8 +36,8 @@ def apply_to_image(image: BaseImage, *, color: str, radius: float, sigma: float,
     shadow.composite(opacity, operator=COPY_ALPHA)
 
     result = Image(width=new_width, height=new_height, pseudo='xc:transparent')
+    result.composite(shadow)
     result.composite(image)
-    result.composite(shadow, operator='difference')
 
     trimmed = result.clone()
     trimmed.trim(color=Color('transparent'))
