@@ -1,5 +1,4 @@
 import argparse
-from ctypes import sizeof
 import os
 import sys
 import traceback
