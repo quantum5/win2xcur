@@ -1,4 +1,5 @@
 import argparse
+from ctypes import sizeof
 import os
 import sys
 import traceback
@@ -9,7 +10,19 @@ from typing import BinaryIO
 
 from win2xcur import shadow
 from win2xcur.parser import open_blob
+from win2xcur.parser.base import BaseParser
 from win2xcur.writer import to_x11
+
+
+def resize_cursor(cursor: BaseParser, size: int):
+    for f in cursor.frames:
+        for img in f:
+            width, height = img.image.size
+            x_ratio = size / width if width else 0
+            y_ratio = size / height if height else 0
+            spot_x, spot_y = img.hotspot
+            img.hotspot = (round(spot_x * x_ratio), round(spot_y * y_ratio))
+            img.image.resize(size, size, 'point')
 
 
 def main() -> None:
@@ -32,6 +45,8 @@ def main() -> None:
                         help='y-offset of shadow (as fraction of height)')
     parser.add_argument('-c', '--shadow-color', default='#000000',
                         help='color of the shadow')
+    parser.add_argument('-z', '--size', type=int, default=0,
+                        help='cursor size (px)')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -46,6 +61,8 @@ def main() -> None:
                 print(f'Error occurred while processing {name}:', file=sys.stderr)
                 traceback.print_exc()
         else:
+            if args.size:
+                resize_cursor(cursor, args.size)
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
                                        sigma=args.shadow_sigma, xoffset=args.shadow_x, yoffset=args.shadow_y)
