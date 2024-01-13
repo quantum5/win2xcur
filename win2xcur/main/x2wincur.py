@@ -7,6 +7,7 @@ from multiprocessing.pool import ThreadPool
 from threading import Lock
 from typing import BinaryIO
 
+from win2xcur import scale
 from win2xcur.parser import open_blob
 from win2xcur.writer import to_smart
 
@@ -17,6 +18,8 @@ def main() -> None:
                         help='X11 cursor files to convert (no extension)')
     parser.add_argument('-o', '--output', '--output-dir', default=os.curdir,
                         help='Directory to store converted cursor files.')
+    parser.add_argument('-S', '--scale', default=None, type=float,
+                        help='Scale the cursor by the specified factor.')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -31,6 +34,8 @@ def main() -> None:
                 print(f'Error occurred while processing {name}:', file=sys.stderr)
                 traceback.print_exc()
         else:
+            if args.scale:
+                scale.apply_to_frames(cursor.frames, scale=args.scale)
             ext, result = to_smart(cursor.frames)
             output = os.path.join(args.output, os.path.basename(name) + ext)
             with open(output, 'wb') as f:

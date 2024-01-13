@@ -7,7 +7,7 @@ from multiprocessing.pool import ThreadPool
 from threading import Lock
 from typing import BinaryIO
 
-from win2xcur import shadow
+from win2xcur import scale, shadow
 from win2xcur.parser import open_blob
 from win2xcur.writer import to_x11
 
@@ -32,6 +32,8 @@ def main() -> None:
                         help='y-offset of shadow (as fraction of height)')
     parser.add_argument('-c', '--shadow-color', default='#000000',
                         help='color of the shadow')
+    parser.add_argument('--scale', default=None, type=float,
+                        help='Scale the cursor by the specified factor.')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -46,6 +48,8 @@ def main() -> None:
                 print(f'Error occurred while processing {name}:', file=sys.stderr)
                 traceback.print_exc()
         else:
+            if args.scale:
+                scale.apply_to_frames(cursor.frames, scale=args.scale)
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
                                        sigma=args.shadow_sigma, xoffset=args.shadow_x, yoffset=args.shadow_y)
