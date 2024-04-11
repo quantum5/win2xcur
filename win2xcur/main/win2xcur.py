@@ -7,7 +7,7 @@ from multiprocessing.pool import ThreadPool
 from threading import Lock
 from typing import BinaryIO
 
-from win2xcur import scale, shadow
+from win2xcur import scale, shadow, multiscale
 from win2xcur.parser import open_blob
 from win2xcur.writer import to_x11
 
@@ -34,6 +34,10 @@ def main() -> None:
                         help='color of the shadow')
     parser.add_argument('--scale', default=None, type=float,
                         help='Scale the cursor by the specified factor.')
+    parser.add_argument('--multiscale', action='store_true',
+                        help='Generate multiple sizes for each cursor.')
+    parser.add_argument('--multiscale-min', type=int, default=12,
+                        help='Minimum size to generate.')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -48,7 +52,9 @@ def main() -> None:
                 print(f'Error occurred while processing {name}:', file=sys.stderr)
                 traceback.print_exc()
         else:
-            if args.scale:
+            if args.multiscale:
+                multisize.generates_frames(cursor=cursor, min_size=args.multiscale_min)
+            elif args.scale:
                 scale.apply_to_frames(cursor.frames, scale=args.scale)
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
