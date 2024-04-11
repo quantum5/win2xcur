@@ -53,7 +53,7 @@ def main() -> None:
                 traceback.print_exc()
         else:
             if args.multiscale:
-                multisize.generates_frames(cursor=cursor, min_size=args.multiscale_min)
+                multiscale.generates_frames(cursor=cursor, min_size=args.multiscale_min)
             elif args.scale:
                 scale.apply_to_frames(cursor.frames, scale=args.scale)
             if args.shadow:
