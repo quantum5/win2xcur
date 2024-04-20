@@ -51,4 +51,4 @@ For example, if you want to convert DMZ-White to Windows:
 are using unconventional distros (e.g. Alpine) and are getting errors related
 to `wand`, please see the [Wand documentation on installation][wand-install].
 
-  [wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
+[wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html

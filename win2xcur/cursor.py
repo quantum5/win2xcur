@@ -16,6 +16,10 @@ class CursorImage:
     def __repr__(self) -> str:
         return f'CursorImage(image={self.image!r}, hotspot={self.hotspot!r}, nominal={self.nominal!r})'
 
+    def scale(self, width: int, height: int) -> None:
+        self.image.scale(width, height)
+        self.nominal = max(width, height)
+
 
 class CursorFrame:
     images: List[CursorImage]
