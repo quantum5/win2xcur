@@ -1,0 +1,35 @@
+[project]
+name = "win2xcur"
+authors = [
+    {name = "quantum", email = "quantum2048@gmail.com"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: X11 Applications",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Desktop Environment",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy >=1.2.12, <2.0.0",
+    "Wand >=0.6.13, <1.0.0",
+]
+description = "win2xcur is a tool to convert Windows .cur and .ani cursors to Xcursor format."
+dynamic = ["version"]
+
+[project.scripts]
+win2xcur = 'win2xcur.main.win2xcur:main'
+x2wincur = 'win2xcur.main.x2wincur:main'
+
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
