@@ -22,6 +22,10 @@ To install from GitHub:
 
     pip install -e git+https://github.com/quantum5/win2xcur.git
 
+To install from nix flakes:
+
+    nix profile install "github:quantum5/win2xcur#python311.bin"
+
 ## Usage: `win2xcur`
 
 For example, if you want to convert [the sample cursor](sample/crosshair.cur)
@@ -52,3 +56,6 @@ are using unconventional distros (e.g. Alpine) and are getting errors related
 to `wand`, please see the [Wand documentation on installation][wand-install].
 
   [wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
+
+Nix installation will not interfere with your local python, try this
+option if you have dependencies or python version conflicts.

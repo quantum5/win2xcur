@@ -143,3 +143,10 @@ cython_debug/
 # For testing
 input/
 output/
+
+# nix build
+result
+.direnv
+
+# vs code
+.vscode
