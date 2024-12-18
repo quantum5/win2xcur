@@ -10,3 +10,7 @@ def apply_to_frames(frames: List[CursorFrame], *, scale: float) -> None:
                 int(round(cursor.image.width * scale)),
                 int(round(cursor.image.height) * scale),
             )
+            cursor.nominal = int(cursor.nominal * scale)
+            hx,hy = cursor.hotspot
+            cursor.hotspot = (int(hx * scale),int(hy*scale))
+
