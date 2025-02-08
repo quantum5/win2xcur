@@ -35,7 +35,11 @@ def main() -> None:
                 traceback.print_exc()
         else:
             if args.scale:
-                scale.apply_to_frames(cursor.frames, scale=args.scale)
+                scales = eval(args.scale)
+                if isinstance(scales, (int, float)):
+                    scale.apply_to_frames(cursor.frames, scale=scales)
+                else:
+                    cursor.frames = scale.apply_to_frames_MS(cursor.frames, scales=scales)
             ext, result = to_smart(cursor.frames)
             output = os.path.join(args.output, os.path.basename(name) + ext)
             with open(output, 'wb') as f:
