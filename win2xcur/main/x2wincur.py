@@ -18,8 +18,8 @@ def main() -> None:
                         help='X11 cursor files to convert (no extension)')
     parser.add_argument('-o', '--output', '--output-dir', default=os.curdir,
                         help='Directory to store converted cursor files.')
-    parser.add_argument('-S', '--scale', default=None, type=float,
-                        help='Scale the cursor by the specified factor.')
+    parser.add_argument('-S', '--scale', default=None, type=str,
+                        help='Scale the cursor by the specified factor. Multi-scale "[0.125.0.1875,0.25]"')
 
     args = parser.parse_args()
     print_lock = Lock()
