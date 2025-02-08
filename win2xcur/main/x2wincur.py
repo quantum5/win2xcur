@@ -19,7 +19,9 @@ def main() -> None:
     parser.add_argument('-o', '--output', '--output-dir', default=os.curdir,
                         help='Directory to store converted cursor files.')
     parser.add_argument('-S', '--scale', default=None, type=str,
-                        help='Scale the cursor by the specified factor. Multi-scale "[0.125.0.1875,0.25]"')
+                        help='Scale the cursor by the specified factor. Multi-scale "[0.125,0.1875,0.25]"')
+    parser.add_argument('--size', default=None, type=str,
+                        help='Scale the cursor to the specified size. Multi-size "[32,28,64]"')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -40,6 +42,13 @@ def main() -> None:
                     scale.apply_to_frames(cursor.frames, scale=scales)
                 else:
                     cursor.frames = scale.apply_to_frames_MS(cursor.frames, scales=scales)
+            elif args.size:
+                sizes = eval(args.size)
+                if isinstance(sizes, (int, float)):
+                    scale.apply_to_frames(cursor.frames, size=sizes)
+                else:
+                    cursor.frames = scale.apply_to_frames_MS(cursor.frames, sizes=sizes)
+
             ext, result = to_smart(cursor.frames)
             output = os.path.join(args.output, os.path.basename(name) + ext)
             with open(output, 'wb') as f:

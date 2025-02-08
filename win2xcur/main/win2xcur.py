@@ -33,7 +33,9 @@ def main() -> None:
     parser.add_argument('-c', '--shadow-color', default='#000000',
                         help='color of the shadow')
     parser.add_argument('--scale', default=None, type=str,
-                        help='Scale the cursor by the specified factor. Multi-scale "[0.125.0.1875,0.25]"')
+                        help='Scale the cursor by the specified factor. Multi-scale "[0.125,0.1875,0.25]"')
+    parser.add_argument('--size', default=None, type=str,
+                        help='Scale the cursor to the specified size. Multi-size "[32,28,64]"')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -54,6 +56,13 @@ def main() -> None:
                     scale.apply_to_frames(cursor.frames, scale=scales)
                 else:
                     cursor.frames = scale.apply_to_frames_MS(cursor.frames, scales=scales)
+            elif args.size:
+                sizes = eval(args.size)
+                if isinstance(sizes, (int, float)):
+                    scale.apply_to_frames(cursor.frames, size=sizes)
+                else:
+                    cursor.frames = scale.apply_to_frames_MS(cursor.frames, sizes=sizes)
+
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
                                        sigma=args.shadow_sigma, xoffset=args.shadow_x, yoffset=args.shadow_y)
