@@ -18,9 +18,9 @@ def main() -> None:
                         help='X11 cursor files to convert (no extension)')
     parser.add_argument('-o', '--output', '--output-dir', default=os.curdir,
                         help='Directory to store converted cursor files.')
-    parser.add_argument('-S', '--scale', default=None, type=str,
+    parser.add_argument('-S', '--scale', nargs='*', type=float, default=None,
                         help='Scale the cursor by the specified factor. Multi-scale "[0.125,0.1875,0.25]"')
-    parser.add_argument('--size', default=None, type=str,
+    parser.add_argument('--size', nargs='*', type=int, default=None,
                         help='Scale the cursor to the specified size. Multi-size "[32,28,64]"')
 
     args = parser.parse_args()
@@ -37,17 +37,11 @@ def main() -> None:
                 traceback.print_exc()
         else:
             if args.scale:
-                scales = eval(args.scale)
-                if isinstance(scales, (int, float)):
-                    scale.apply_to_frames(cursor.frames, scale=scales)
-                else:
-                    cursor.frames = scale.apply_to_frames_MS(cursor.frames, scales=scales)
+                cursor.frames = scale.apply_to_frames_by_scales(cursor.frames, scales=args.scale)
             elif args.size:
-                sizes = eval(args.size)
-                if isinstance(sizes, (int, float)):
-                    scale.apply_to_frames(cursor.frames, size=sizes)
-                else:
-                    cursor.frames = scale.apply_to_frames_MS(cursor.frames, sizes=sizes)
+                cursor.frames = scale.apply_to_frames_to_sizes(cursor.frames, sizes=args.size)
+            else:
+                raise NotImplementedError('Please specify either --scale or --size')
 
             ext, result = to_smart(cursor.frames)
             output = os.path.join(args.output, os.path.basename(name) + ext)
