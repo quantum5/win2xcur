@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import Optional
 
 from win2xcur.parser.base import BaseParser
@@ -29,6 +29,9 @@ class CursorTheme:
 
     # TODO: add some generated cursors here
 
+
+ALL_CURSORS = [field.name for field in fields(CursorTheme) if field.name != 'name']
+WIN_CURSORS = ALL_CURSORS[:17]
 
 XCURSOR_ALIASES = {
     'arrow': [

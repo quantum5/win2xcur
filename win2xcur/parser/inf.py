@@ -1,4 +1,3 @@
-import dataclasses
 import ntpath
 import re
 from configparser import ConfigParser, ParsingError
@@ -8,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from win2xcur.parser import open_blob
-from win2xcur.theme import CursorTheme
+from win2xcur.theme import CursorTheme, WIN_CURSORS
 
 reexpand = re.compile(r'%(\w*)%')
 
@@ -58,10 +57,9 @@ def parse_inf(inf: Path) -> CursorTheme:
     parsed = next(DictReader(StringIO(updates[0]), fieldnames=['root', 'path', 'name', 'flags', 'value']))
 
     params: dict[str, Any] = {'name': expand_registry(parsed['name'], strings)}
-    cursor_names = [field.name for field in dataclasses.fields(CursorTheme) if field.name != 'name']
     cursor_paths = expand_registry(parsed['value'], strings).split(',')
 
-    for name, filename in zip(cursor_names, cursor_paths):
+    for name, filename in zip(WIN_CURSORS, cursor_paths):
         if not filename:
             continue
 
