@@ -16,6 +16,7 @@ setup(
             'win2xcur = win2xcur.main.win2xcur:main',
             'win2xcurtheme = win2xcur.main.win2xcurtheme:main',
             'x2wincur = win2xcur.main.x2wincur:main',
+            'x2wincurtheme = win2xcur.main.x2wincurtheme:main',
         ],
     },
 
