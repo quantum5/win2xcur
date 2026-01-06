@@ -43,7 +43,11 @@ def parse_inf(inf: Path) -> CursorTheme:
     except KeyError:
         raise ValueError(f'Registry update section does not exist in INF: {reg_section}')
 
-    updates = [update for update in updates if update.startswith('hkcu,"control panel\\cursors\\schemes",')]
+    updates = [update for update in updates if update.startswith((
+        'hkcu,"control panel\\cursors\\schemes",',
+        'hklm,"software\\microsoft\\windows\\currentversion\\control panel\\cursors\\schemes",',
+    ))]
+
     if len(updates) == 0:
         raise ValueError('No cursor installs found in INF')
     elif len(updates) > 1:
