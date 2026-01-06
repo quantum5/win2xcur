@@ -53,6 +53,8 @@ jobs:
           mkdir dmz-white
           coverage run -a -m win2xcur.main.x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white
           ls -l dmz-white/*
+          coverage run -a -m win2xcur.main.x2wincurtheme /usr/share/icons/DMZ-White/cursors -n DMZ-White -o dmz-white-install
+          ls -l dmz-white-install/*
       - name: Generating coverage report
         run: coverage xml
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v5
