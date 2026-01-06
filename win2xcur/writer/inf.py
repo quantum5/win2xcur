@@ -18,7 +18,7 @@ AddReg    = Scheme.Reg
 Scheme.Cur = 10,"%CUR_DIR%"
 
 [Scheme.Reg]
-HKCU,"Control Panel\\Cursors\\Schemes","%SCHEME_NAME%",,"{list}"
+HKLM,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel\\Cursors\\Schemes","%SCHEME_NAME%",,"{list}"
 
 [Scheme.Cur]
 {files}
