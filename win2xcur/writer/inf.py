@@ -24,7 +24,7 @@ HKCU,"Control Panel\\Cursors\\Schemes","%SCHEME_NAME%",,"{list}"
 {files}
 
 [Strings]
-CUR_DIR = "Cursors\\%SCHEME_NAME%"
+CUR_DIR = "Cursors\\{name}"
 SCHEME_NAME = "{name}"
 {mapping}
 """
