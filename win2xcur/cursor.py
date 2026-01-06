@@ -16,6 +16,8 @@ class CursorImage:
     def __repr__(self) -> str:
         return f'CursorImage(image={self.image!r}, hotspot={self.hotspot!r}, nominal={self.nominal!r})'
 
+    def clone(self):
+        return CursorImage(self.image.clone(), self.hotspot, self.nominal)
 
 class CursorFrame:
     images: List[CursorImage]
@@ -36,3 +38,6 @@ class CursorFrame:
 
     def __repr__(self) -> str:
         return f'CursorFrame(images={self.images!r}, delay={self.delay!r})'
+
+    def clone(self):
+        return CursorFrame([img.clone() for img in self.images], self.delay)

@@ -32,8 +32,10 @@ def main() -> None:
                         help='y-offset of shadow (as fraction of height)')
     parser.add_argument('-c', '--shadow-color', default='#000000',
                         help='color of the shadow')
-    parser.add_argument('--scale', default=None, type=float,
-                        help='Scale the cursor by the specified factor.')
+    parser.add_argument('--scale', nargs='*', type=float, default=None,
+                        help='Scale the cursor by the specified factor. Multi-scale "[0.125,0.1875,0.25]"')
+    parser.add_argument('--size', nargs='*', type=int, default=None,
+                        help='Scale the cursor to the specified size. Multi-size "[32,48,64]"')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -49,7 +51,12 @@ def main() -> None:
                 traceback.print_exc()
         else:
             if args.scale:
-                scale.apply_to_frames(cursor.frames, scale=args.scale)
+                cursor.frames = scale.apply_to_frames_by_scales(cursor.frames, scales=args.scale)
+            elif args.size:
+                cursor.frames = scale.apply_to_frames_to_sizes(cursor.frames, sizes=args.size)
+            else:
+                raise NotImplementedError('Please specify either --scale or --size')
+
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
                                        sigma=args.shadow_sigma, xoffset=args.shadow_x, yoffset=args.shadow_y)

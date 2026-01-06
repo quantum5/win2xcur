@@ -28,13 +28,13 @@ For example, if you want to convert [the sample cursor](sample/crosshair.cur)
 to Linux format:
 
     mkdir output/
-    win2xcur sample/crosshair.cur -o output/
+    win2xcur sample/crosshair.cur -o output/ --size 32 48 64
 
 `-s` can be specified to enable shadows.
 Multiple cursors files can be specified on the command line.
 For example, to convert a directory of cursors with shadows enabled:
 
-    win2xcur input/*.{ani,cur} -o output/ 
+    win2xcur input/*.{ani,cur} -o output/ --size 32 48 64
 
 For more information, run `win2xcur --help`.
 
@@ -43,7 +43,7 @@ For more information, run `win2xcur --help`.
 For example, if you want to convert DMZ-White to Windows:
 
     mkdir dmz-white/
-    x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white/
+    x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white/ --size 32 48 64
 
 ## Troubleshooting
 
