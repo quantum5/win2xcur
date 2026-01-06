@@ -63,13 +63,15 @@ def parse_inf(inf: Path) -> CursorTheme:
     params: dict[str, Any] = {'name': expand_registry(parsed['name'], strings)}
     cursor_paths = expand_registry(parsed['value'], strings).split(',')
 
+    casefolded = {file.name.casefold(): file for file in inf.parent.iterdir() if file.is_file()}
+
     for name, filename in zip(WIN_CURSORS, cursor_paths):
         if not filename:
             continue
 
         basename = ntpath.basename(filename)
         try:
-            with open(inf.parent / basename, 'rb') as f:
+            with open(casefolded[basename.casefold()], 'rb') as f:
                 params[name] = open_blob(f.read())
         except FileNotFoundError:
             raise ValueError(f'Expected cursor file in same directory as INF: {basename}')
