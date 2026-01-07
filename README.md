@@ -19,6 +19,9 @@ theme on Linux.
 Conversely, `x2wincurtheme` converts a directory of Xcursors into Windows, while
 generating the complementary `install.inf` for easy installation.
 
+Finally, `inspectcur` serves as a debugging tool, able to load arbitrary Windows
+or X11 cursors and show the animation settings, image sizes, and hotspots.
+
 ## Installation
 
 To install the latest stable version:
@@ -76,6 +79,27 @@ To convert a whole Xcursor theme to Windows format, run `x2wincurtheme` on the
 For example, for DMZ-White:
 
     x2wincurtheme /usr/share/icons/DMZ-White/cursors -n DMZ-White -o dmz-white/
+
+## Usage: `inspectcur`
+
+```console
+$ inspectcur /usr/share/icons/DMZ-White/cursors/left_ptr
+Cursor file: /usr/share/icons/DMZ-White/cursors/left_ptr
+1. nominal size 24, 24x24, hotspot: (7, 4)
+2. nominal size 32, 32x32, hotspot: (10, 5)
+3. nominal size 48, 48x48, hotspot: (14, 8)
+$ inspectcur /usr/share/icons/DMZ-White/cursors/watch 
+Cursor file: /usr/share/icons/DMZ-White/cursors/watch
+  - Frame 0, delay 30.0 ms
+    1. nominal size 24, 24x24, hotspot: (12, 12)
+    2. nominal size 32, 32x32, hotspot: (18, 18)
+    3. nominal size 48, 48x48, hotspot: (24, 24)
+  - Frame 1, delay 30.0 ms
+    1. nominal size 24, 24x24, hotspot: (12, 12)
+    2. nominal size 32, 32x32, hotspot: (18, 18)
+    3. nominal size 48, 48x48, hotspot: (24, 24)
+...
+```
 
 ## Troubleshooting
 
