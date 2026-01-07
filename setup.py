@@ -13,6 +13,7 @@ setup(
 
     entry_points={
         'console_scripts': [
+            'inspectcur = win2xcur.main.inspectcur:main',
             'win2xcur = win2xcur.main.win2xcur:main',
             'win2xcurtheme = win2xcur.main.win2xcurtheme:main',
             'x2wincur = win2xcur.main.x2wincur:main',

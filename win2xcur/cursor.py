@@ -19,9 +19,9 @@ class CursorImage:
 
 class CursorFrame:
     images: List[CursorImage]
-    delay: int
+    delay: float
 
-    def __init__(self, images: List[CursorImage], delay: int = 0) -> None:
+    def __init__(self, images: List[CursorImage], delay: float = 0) -> None:
         self.images = images
         self.delay = delay
 
