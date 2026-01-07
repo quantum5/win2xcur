@@ -27,6 +27,9 @@ def main() -> None:
 
     theme = parse_xcursor_theme(args.name, args.source)
 
+    if not theme.arrow:
+        sys.exit(f'Basic pointer cursor not found in theme: {args.source}')
+
     def process(name: str) -> None:
         cursor = getattr(theme, name)
         if args.scale:

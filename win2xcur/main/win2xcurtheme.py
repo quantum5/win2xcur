@@ -41,6 +41,9 @@ def main() -> None:
 
     theme = parse_inf(args.inf)
 
+    if not theme.arrow:
+        sys.exit(f'Basic pointer cursor not found in theme: {args.inf}')
+
     def process(name: str, aliases: list[str]) -> None:
         cursor = getattr(theme, name)
         if cursor is None:
