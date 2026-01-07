@@ -13,7 +13,7 @@ from win2xcur.writer import to_x11
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Converts Windows cursor themes to X11 cursors.')
+    parser = argparse.ArgumentParser(description='Converts Windows cursor themes to X11 ones.')
     parser.add_argument('inf', type=Path, help='Windows cursor theme to convert (*.inf)')
     parser.add_argument('-o', '--output', '--output-dir', type=Path, default=os.curdir,
                         help='Directory to store converted cursor files.')

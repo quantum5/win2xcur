@@ -12,7 +12,7 @@ from win2xcur.writer.inf import export_windows_theme
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Converts Windows cursors to X11 cursors.')
+    parser = argparse.ArgumentParser(description='Converts X11 cursor themes to Windows ones.')
     parser.add_argument('source', type=Path, help='X11 cursor files directory')
     parser.add_argument('-n', '--name', required=True, help='name of the cursor theme')
     parser.add_argument('-o', '--output', '--output-dir', type=Path, default=os.curdir,
