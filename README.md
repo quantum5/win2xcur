@@ -32,6 +32,10 @@ To install from GitHub:
 
     pip install -e git+https://github.com/quantum5/win2xcur.git
 
+To install from the [AUR package](https://aur.archlinux.org/packages/win2xcur) (Using paru):
+
+    paru -S win2xcur
+
 ## Usage: `win2xcur`
 
 For example, if you want to convert [the sample cursor](sample/crosshair.cur)
