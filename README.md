@@ -1,4 +1,6 @@
-# `win2xcur` and `x2wincur` [![Build Status](https://img.shields.io/github/actions/workflow/status/quantum5/win2xcur/build.yml)](https://github.com/quantum5/win2xcur/actions) [![PyPI](https://img.shields.io/pypi/v/win2xcur.svg)](https://pypi.org/project/win2xcur/) [![PyPI - Format](https://img.shields.io/pypi/format/win2xcur.svg)](https://pypi.org/project/win2xcur/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/win2xcur.svg)](https://pypi.org/project/win2xcur/)
+# `win2xcur` and
+
+`x2wincur` [![Build Status](https://img.shields.io/github/actions/workflow/status/quantum5/win2xcur/build.yml)](https://github.com/quantum5/win2xcur/actions) [![PyPI](https://img.shields.io/pypi/v/win2xcur.svg)](https://pypi.org/project/win2xcur/) [![PyPI - Format](https://img.shields.io/pypi/format/win2xcur.svg)](https://pypi.org/project/win2xcur/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/win2xcur.svg)](https://pypi.org/project/win2xcur/)
 
 `win2xcur` is a tool that converts cursors from Windows format (`*.cur`,
 `*.ani`) to Xcursor format. This allows Windows cursor themes to be used on
@@ -31,6 +33,12 @@ To install the latest stable version:
 To install from GitHub:
 
     pip install -e git+https://github.com/quantum5/win2xcur.git
+
+The following **unofficial** packages are available (**use at your own risk!**
+I don't maintain these):
+
+* AUR: [`win2xcur`](https://aur.archlinux.org/packages/win2xcur), which may be
+  installed with `yay -S win2xcur` or `paru -S win2xcur`.
 
 ## Usage: `win2xcur`
 
@@ -67,9 +75,9 @@ You can then create `example-linux/index.theme` as follows:
 
 ```ini
 [Icon Theme]
-Name=example
-Comment=My example cursor theme.
-Example=default
+Name = example
+Comment = My example cursor theme.
+Example = default
 ```
 
 ## Usage: `x2wincurtheme`
@@ -108,4 +116,4 @@ the box on most systems. If you are using unconventional distros (e.g. Alpine)
 and are getting errors related to `wand`, please see the
 [Wand documentation on installation][wand-install].
 
-  [wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
+[wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
