@@ -3,6 +3,7 @@ import re
 from configparser import ConfigParser, ParsingError
 from csv import DictReader
 from io import StringIO
+from itertools import chain
 from pathlib import Path
 from typing import Any
 
@@ -34,14 +35,14 @@ def parse_inf(inf: Path) -> CursorTheme:
         raise ValueError(e.args[0])
 
     try:
-        reg_section = parser['DefaultInstall']['AddReg']
+        reg_sections = parser['DefaultInstall']['AddReg'].split(',')
     except KeyError:
         raise ValueError('Unable to find registry update section in INF')
 
     try:
-        updates = list(parser[reg_section])
-    except KeyError:
-        raise ValueError(f'Registry update section does not exist in INF: {reg_section}')
+        updates = list(chain.from_iterable(list(parser[section.strip()]) for section in reg_sections))
+    except KeyError as e:
+        raise ValueError(f'Registry update section does not exist in INF: {e.args[0]}')
 
     updates = [update for update in updates if update.startswith((
         'hkcu,"control panel\\cursors\\schemes",',
