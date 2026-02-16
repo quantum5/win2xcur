@@ -1,5 +1,4 @@
 import struct
-from copy import copy
 from typing import Any, Iterable, List, Tuple
 
 from win2xcur.cursor import CursorFrame
@@ -109,7 +108,7 @@ class ANIParser(BaseParser):
         if len(order) != step_count:
             raise ValueError('Required chunk "seq " not found.')
 
-        sequence = [copy(frames[i]) for i in order]
+        sequence = [frames[i].clone() for i in order]
         for frame, delay in zip(sequence, delays):
             frame.delay = delay / 60
 
