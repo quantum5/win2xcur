@@ -51,6 +51,8 @@ class ANIParser(BaseParser):
                 break
             found += [name]
             offset += size
+            if offset & 1:
+                offset += 1
             if offset >= len(self.blob):
                 raise ValueError(f'Expected chunk {expected!r}, found {found!r}')
         return name, size, offset
