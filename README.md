@@ -115,3 +115,13 @@ and are getting errors related to `wand`, please see the
 [Wand documentation on installation][wand-install].
 
 [wand-install]: https://docs.wand-py.org/en/0.6.7/guide/install.html
+
+If you are having issues with a particular cursor or cursor theme, feel free to
+open an issue. However, be sure to include:
+1. **the problematic cursor as an attachment[^attach] to the issue**;
+2. the command you ran; and
+3. the full output of the command run.
+
+If I can't reproduce the issue, I will not be able to help you.
+
+[^attach]: Don't make me sign up to a website or pay to download your cursor.
