@@ -7,21 +7,24 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
 
 setup(
     name='win2xcur',
-    version='0.1.2',
+    version='0.2.1',
     packages=find_packages(),
     install_requires=['numpy', 'Wand'],
 
     entry_points={
         'console_scripts': [
+            'inspectcur = win2xcur.main.inspectcur:main',
             'win2xcur = win2xcur.main.win2xcur:main',
+            'win2xcurtheme = win2xcur.main.win2xcurtheme:main',
             'x2wincur = win2xcur.main.x2wincur:main',
+            'x2wincurtheme = win2xcur.main.x2wincurtheme:main',
         ],
     },
 
     author='quantum',
-    author_email='quantum2048@gmail.com',
+    author_email='win2xcur@quantum5.ca',
     url='https://github.com/quantum5/win2xcur',
-    description='win2xcur is a tool to convert Windows .cur and .ani cursors to Xcursor format.',
+    description='win2xcur is a tool to convert Windows .cur and .ani cursors to Xcursor format, and vice versa.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords='cur ani x11 windows win32 cursor xcursor',
@@ -35,10 +38,11 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
         'Topic :: Desktop Environment',
     ],
 )

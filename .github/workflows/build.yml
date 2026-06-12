@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
+        python-version: [ '3.10', 3.11, 3.12, 3.13, 3.14 ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Cache wheels
-        uses: actions/cache@v2
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
@@ -32,7 +32,6 @@ jobs:
       - name: Lint with flake8
         run: flake8 .
       - name: Typecheck with mypy
-        if: matrix.python-version != 3.7
         run: mypy .
       - name: Test packages
         run: python setup.py sdist bdist_wheel
@@ -54,6 +53,11 @@ jobs:
           mkdir dmz-white
           coverage run -a -m win2xcur.main.x2wincur /usr/share/icons/DMZ-White/cursors/* -o dmz-white
           ls -l dmz-white/*
+          coverage run -a -m win2xcur.main.x2wincurtheme /usr/share/icons/DMZ-White/cursors -n DMZ-White -o dmz-white-install
+          ls -l dmz-white-install/*
+          mkdir dmz-white-reconverted
+          coverage run -a -m win2xcur.main.win2xcurtheme dmz-white-install/install.inf -o dmz-white-reconverted
+          ls -l dmz-white-reconverted/*
       - name: Generating coverage report
         run: coverage xml
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v5

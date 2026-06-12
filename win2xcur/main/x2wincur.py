@@ -13,7 +13,7 @@ from win2xcur.writer import to_smart
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Converts Windows cursors to X11 cursors.')
+    parser = argparse.ArgumentParser(description='Converts X11 cursors to Windows cursors.')
     parser.add_argument('files', type=argparse.FileType('rb'), nargs='+',
                         help='X11 cursor files to convert (no extension)')
     parser.add_argument('-o', '--output', '--output-dir', default=os.curdir,
