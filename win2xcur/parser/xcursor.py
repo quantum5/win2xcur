@@ -6,6 +6,7 @@ from wand.image import Image
 
 from win2xcur.cursor import CursorFrame, CursorImage
 from win2xcur.parser.base import BaseParser
+from win2xcur.utils import unpremultiply_alpha
 
 
 class XCursorParser(BaseParser):
@@ -79,7 +80,7 @@ class XCursorParser(BaseParser):
                 raise ValueError(f'Invalid image at {image_start}: expected {image_size} bytes, got {len(blob)} bytes')
 
             image = Image(width=width, height=height)
-            image.import_pixels(channel_map='BGRA', data=blob)
+            image.import_pixels(channel_map='BGRA', data=unpremultiply_alpha(blob))
             images_by_size[nominal_size].append(
                 (CursorImage(image.sequence[0], (x_offset, y_offset), nominal_size), delay)
             )
