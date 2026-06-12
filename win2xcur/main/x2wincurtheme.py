@@ -32,7 +32,7 @@ def main() -> None:
 
     def process(name: str) -> None:
         cursor = getattr(theme, name)
-        if args.scale:
+        if args.scale and cursor:
             scale.apply_to_frames(cursor.frames, scale=args.scale)
 
     with ThreadPool(cpu_count()) as pool:
