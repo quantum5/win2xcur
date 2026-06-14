@@ -8,6 +8,7 @@ from threading import Lock
 from typing import BinaryIO
 
 from win2xcur import scale
+from win2xcur import align
 from win2xcur.parser import open_blob
 from win2xcur.writer import to_smart
 
@@ -20,6 +21,8 @@ def main() -> None:
                         help='Directory to store converted cursor files.')
     parser.add_argument('-S', '--scale', default=None, type=float,
                         help='Scale the cursor by the specified factor.')
+    parser.add_argument('--align-sizes', action='store_true',
+                        help='Align image sizes to Windows default cursor sizes.')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -36,6 +39,8 @@ def main() -> None:
         else:
             if args.scale:
                 scale.apply_to_frames(cursor.frames, scale=args.scale)
+            if args.align_sizes:
+                align.apply_to_frames(cursor.frames)
             ext, result = to_smart(cursor.frames)
             output = os.path.join(args.output, os.path.basename(name) + ext)
             with open(output, 'wb') as f:

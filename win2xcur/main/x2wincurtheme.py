@@ -5,7 +5,7 @@ from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 
-from win2xcur import scale
+from win2xcur import align, scale
 from win2xcur.parser.xtheme import parse_xcursor_theme
 from win2xcur.theme import ALL_CURSORS
 from win2xcur.writer.inf import export_windows_theme
@@ -19,6 +19,8 @@ def main() -> None:
                         help='Directory to store converted cursor files and install.inf.')
     parser.add_argument('-S', '--scale', default=None, type=float,
                         help='Scale the cursor by the specified factor.')
+    parser.add_argument('--align-sizes', action='store_true',
+                        help='Align image sizes to Windows default cursor sizes.')
 
     args = parser.parse_args()
 
@@ -32,8 +34,14 @@ def main() -> None:
 
     def process(name: str) -> None:
         cursor = getattr(theme, name)
-        if args.scale and cursor:
+
+        if not cursor: 
+            return
+        
+        if args.scale:
             scale.apply_to_frames(cursor.frames, scale=args.scale)
+        if args.align_sizes:
+            align.apply_to_frames(cursor.frames)
 
     with ThreadPool(cpu_count()) as pool:
         pool.map(process, ALL_CURSORS)
