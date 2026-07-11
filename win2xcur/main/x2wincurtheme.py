@@ -19,6 +19,8 @@ def main() -> None:
                         help='Directory to store converted cursor files and install.inf.')
     parser.add_argument('-S', '--scale', default=None, type=float,
                         help='Scale the cursor by the specified factor.')
+    parser.add_argument('-u', '--user', '--hkcu', default=False, action='store_true',
+                        help='Install cursors for the current user only.')
 
     args = parser.parse_args()
 
@@ -39,7 +41,7 @@ def main() -> None:
         pool.map(process, ALL_CURSORS)
 
     args.output.mkdir(exist_ok=True)
-    export_windows_theme(theme, args.output)
+    export_windows_theme(theme, args.output, user=args.user)
 
 
 if __name__ == '__main__':

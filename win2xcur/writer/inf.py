@@ -15,10 +15,10 @@ CopyFiles = Scheme.Cur
 AddReg    = Scheme.Reg
 
 [DestinationDirs]
-Scheme.Cur = 10,"%CUR_DIR%"
+Scheme.Cur = {root},"%CUR_DIR%"
 
 [Scheme.Reg]
-HKLM,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel\\Cursors\\Schemes","%SCHEME_NAME%",,"{list}"
+{hive},"{key}","%SCHEME_NAME%",,"{list}"
 
 [Scheme.Cur]
 {files}
@@ -41,10 +41,10 @@ DelFiles = Scheme.Cur
 DelReg   = Scheme.Reg
 
 [DestinationDirs]
-Scheme.Cur = 10,"%CUR_DIR%"
+Scheme.Cur = {root},"%CUR_DIR%"
 
 [Scheme.Reg]
-HKLM,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel\\Cursors\\Schemes","%SCHEME_NAME%"
+{hive},"{key}","%SCHEME_NAME%"
 
 [Scheme.Cur]
 {files}
@@ -55,7 +55,7 @@ SCHEME_NAME = "{name}"
 """
 
 
-def export_windows_theme(theme: CursorTheme, directory: Path) -> None:
+def export_windows_theme(theme: CursorTheme, directory: Path, user: bool = False) -> None:
     files = []
     mapping = {}
 
@@ -73,9 +73,21 @@ def export_windows_theme(theme: CursorTheme, directory: Path) -> None:
         files.append(filename)
         mapping[name] = filename
 
-    cursor_list = ','.join((f'%10%\\%CUR_DIR%\\%{name}%' if name in mapping else '') for name in WIN_CURSORS)
+    # 16410 is %AppData%, 10 is %SystemRoot%
+    root = 16410 if user else 10
+    cursor_list = ','.join((f'%{root}%\\%CUR_DIR%\\%{name}%' if name in mapping else '') for name in WIN_CURSORS)
     inf_mapping = '\n'.join(f'{key} = "{value}"' for key, value in mapping.items())
-    format_args = {'name': theme.name, 'list': cursor_list, 'mapping': inf_mapping, 'files': '\n'.join(files)}
+
+    format_args = {
+        'root': root,
+        'hive': 'HKCU' if user else 'HKLM',
+        'key': (r'Control Panel\Cursors\Schemes' if user
+                else r'SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes'),
+        'name': theme.name,
+        'list': cursor_list,
+        'mapping': inf_mapping,
+        'files': '\n'.join(files),
+    }
 
     with open(directory / 'install.inf', 'w') as f:
         f.write(INSTALL_INF_TEMPLATE.format(**format_args))
