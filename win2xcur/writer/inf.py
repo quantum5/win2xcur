@@ -3,7 +3,7 @@ from pathlib import Path
 from win2xcur.theme import CursorTheme, WIN_CURSORS
 from win2xcur.writer import to_smart
 
-INF_TEMPLATE = """\
+INSTALL_INF_TEMPLATE = """\
 ; Right click on this file in Windows Explorer and select "Install".
 ; Then, run `main.cpl` and select the cursor theme "{name}".
 
@@ -29,6 +29,31 @@ SCHEME_NAME = "{name}"
 {mapping}
 """
 
+UNINSTALL_INF_TEMPLATE = """\
+; Right click on this file in Windows Explorer and select "Install" to
+; delete this cursor theme from your computer fully.
+
+[Version]
+Signature = "$CHICAGO$"
+
+[DefaultInstall]
+DelFiles = Scheme.Cur
+DelReg   = Scheme.Reg
+
+[DestinationDirs]
+Scheme.Cur = 10,"%CUR_DIR%"
+
+[Scheme.Reg]
+HKLM,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel\\Cursors\\Schemes","%SCHEME_NAME%"
+
+[Scheme.Cur]
+{files}
+
+[Strings]
+CUR_DIR = "Cursors\\{name}"
+SCHEME_NAME = "{name}"
+"""
+
 
 def export_windows_theme(theme: CursorTheme, directory: Path) -> None:
     files = []
@@ -50,6 +75,10 @@ def export_windows_theme(theme: CursorTheme, directory: Path) -> None:
 
     cursor_list = ','.join((f'%10%\\%CUR_DIR%\\%{name}%' if name in mapping else '') for name in WIN_CURSORS)
     inf_mapping = '\n'.join(f'{key} = "{value}"' for key, value in mapping.items())
+    format_args = {'name': theme.name, 'list': cursor_list, 'mapping': inf_mapping, 'files': '\n'.join(files)}
 
     with open(directory / 'install.inf', 'w') as f:
-        f.write(INF_TEMPLATE.format(name=theme.name, list=cursor_list, mapping=inf_mapping, files='\n'.join(files)))
+        f.write(INSTALL_INF_TEMPLATE.format(**format_args))
+
+    with open(directory / 'uninstall.inf', 'w') as f:
+        f.write(UNINSTALL_INF_TEMPLATE.format(**format_args))
