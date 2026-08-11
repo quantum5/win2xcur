@@ -50,11 +50,6 @@ XCURSOR_ALIASES = {
         'alias', 'link', 'dnd-link', '3085a0e285430894940527032f8b26df', '640fb0e74195791501fd1ed57b41487f',
         'a2a266d0498c3104214a47bd64ab0fc8',
 
-        # Sides and corners
-        'top_left_corner', 'top_right_corner', 'bottom_left_corner', 'bottom_right_corner',
-        'top_side', 'bottom_side', 'left_side', 'right_side',
-        'ul_angle', 'ur_angle', 'll_angle', 'lr_angle',
-
         # Right pointer
         # TODO: consider mirroring left cursor
         'right_ptr', 'draft_large', 'draft_small',
@@ -100,13 +95,25 @@ XCURSOR_ALIASES = {
     ],
     'size_ns': ['size_ver', 'size-ver', 'ns-resize', 'n-resize', 's-resize', 'v_double_arrow', 'sb_v_double_arrow',
                 'row-resize', 'split_v', 'double_arrow', '00008160000006810000408080010102',
-                '2870a09082c103050810ffdffffe0204'],
+                '2870a09082c103050810ffdffffe0204',
+
+                # Legacy WM border cursors
+                'top_side', 'bottom_side'],
     'size_ew': ['size_hor', 'size-hor', 'ew-resize', 'e-resize', 'w-resize', 'h_double_arrow', 'sb_h_double_arrow',
-                'col-resize', 'split_h', '14fef782d02440884392942c11205230', '028006030e0e7ebffc7f7070c0600140'],
+                'col-resize', 'split_h', '14fef782d02440884392942c11205230', '028006030e0e7ebffc7f7070c0600140',
+
+                # Legacy WM border cursors
+                'left_side', 'right_side'],
     'size_nwse': ['size_fdiag', 'size-fdiag', 'nwse-resize', 'nw-resize', 'se-resize', 'bd_double_arrow',
-                  'c7088f0f3e6c8088236ef8e1e3e70000'],
+                  'c7088f0f3e6c8088236ef8e1e3e70000',
+
+                  # Legacy WM corner cursors
+                  'top_left_corner', 'bottom_right_corner', 'ul_angle', 'lr_angle'],
     'size_nesw': ['size_bdiag', 'size-bdiag', 'nesw-resize', 'ne-resize', 'sw-resize', 'fd_double_arrow',
-                  'fcf1c3c7cd4491d801f1e1c78f100000'],
+                  'fcf1c3c7cd4491d801f1e1c78f100000',
+
+                  # Legacy WM corner cursors
+                  'top_right_corner', 'bottom_left_corner', 'ur_angle', 'll_angle'],
     'move': [
         # Regular moves
         'fleur', 'size_all', 'all-scroll',
