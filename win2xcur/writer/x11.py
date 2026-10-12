@@ -1,22 +1,28 @@
 from itertools import chain
 from operator import itemgetter
-from typing import List
+from typing import List, Optional
 
 from win2xcur.cursor import CursorFrame
 from win2xcur.parser import XCursorParser
 from win2xcur.utils import premultiply_alpha
 
 
-def to_x11(frames: List[CursorFrame]) -> bytes:
+def to_x11(frames: List[CursorFrame], default_nominal_size: Optional[int]) -> bytes:
     chunks = []
 
     for frame in frames:
         for cursor in frame:
             hx, hy = cursor.hotspot
+            if cursor.nominal is not None:
+                nominal_size = cursor.nominal
+            elif default_nominal_size is not None:
+                nominal_size = default_nominal_size
+            else:
+                nominal_size = cursor.image.width
             header = XCursorParser.IMAGE_HEADER.pack(
                 XCursorParser.IMAGE_HEADER.size,
                 XCursorParser.CHUNK_IMAGE,
-                cursor.nominal,
+                nominal_size,
                 1,
                 cursor.image.width,
                 cursor.image.height,
@@ -26,7 +32,7 @@ def to_x11(frames: List[CursorFrame]) -> bytes:
             )
             chunks.append((
                 XCursorParser.CHUNK_IMAGE,
-                cursor.nominal,
+                nominal_size,
                 header + premultiply_alpha(bytes(cursor.image.export_pixels(channel_map='BGRA')))
             ))
 

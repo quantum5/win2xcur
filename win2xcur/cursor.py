@@ -1,4 +1,4 @@
-from typing import Iterator, List, Tuple
+from typing import Iterator, List, Tuple, Optional
 
 from wand.sequence import SingleImage
 
@@ -8,7 +8,7 @@ class CursorImage:
     hotspot: Tuple[int, int]
     nominal: int
 
-    def __init__(self, image: SingleImage, hotspot: Tuple[int, int], nominal: int) -> None:
+    def __init__(self, image: SingleImage, hotspot: Tuple[int, int], nominal: Optional[int]) -> None:
         self.image = image
         self.hotspot = hotspot
         self.nominal = nominal

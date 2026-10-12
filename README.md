@@ -52,6 +52,9 @@ For example, to convert a directory of cursors with shadows enabled:
 
     win2xcur input/*.{ani,cur} -o output/ 
 
+When converting pixel art cursors, it is often useful to set a nominal size of
+24px, which can be done with `--nominal-size 24`.
+
 For more information, run `win2xcur --help`.
 
 ## Usage: `x2wincur`
