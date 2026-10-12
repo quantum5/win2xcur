@@ -34,6 +34,8 @@ def main() -> None:
                         help='color of the shadow')
     parser.add_argument('--scale', default=None, type=float,
                         help='Scale the cursor by the specified factor.')
+    parser.add_argument('--nominal-size', type=int, default=None,
+                        help='Nominal size to use. Defaults to the width. Typically use 24 for pixel art cursors, leave default for other cursors.')
 
     args = parser.parse_args()
     print_lock = Lock()
@@ -53,7 +55,7 @@ def main() -> None:
             if args.shadow:
                 shadow.apply_to_frames(cursor.frames, color=args.shadow_color, radius=args.shadow_radius,
                                        sigma=args.shadow_sigma, xoffset=args.shadow_x, yoffset=args.shadow_y)
-            result = to_x11(cursor.frames)
+            result = to_x11(cursor.frames, args.nominal_size)
             output = os.path.join(args.output, os.path.splitext(os.path.basename(name))[0])
             with open(output, 'wb') as f:
                 f.write(result)
